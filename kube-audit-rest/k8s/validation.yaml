@@ -1,0 +1,35 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: kube-audit-rest
+  labels:
+    app: kube-audit-rest
+webhooks:
+  - name: kube-audit-rest.kube-audit-rest.svc
+    failurePolicy: Ignore
+    timeoutSeconds: 5
+    sideEffects: None
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values: ["argocd", "istio-system", "kube-system", "kube-public"]
+    clientConfig:
+      service:
+        name: kube-audit-rest
+        namespace: kube-audit-rest
+        path: "/log-request"
+        port: 443
+      caBundle: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURHekNDQWdPZ0F3SUJBZ0lVVzFHbzVwQUJXZWZuZk5Dd2lFa1htWE9yQkNvd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0hURWJNQmtHQTFVRUF3d1NhM1ZpWlMxaGRXUnBkQzF5WlhOMExXTmhNQjRYRFRJMU1Ea3dNVEF3TkRBeQpNbG9YRFRJMk1Ea3dNVEF3TkRBeU1sb3dIVEViTUJrR0ExVUVBd3dTYTNWaVpTMWhkV1JwZEMxeVpYTjBMV05oCk1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBcjFFYy9ucEdTeW1jV1NDWlBPeHIKbERROWY0NkRYb0h1dGJQTFgrTFo3NklJYTZHb0F3ZXhRWDYzb2Uyb3NSclNHdlVyTVY2SzFTanBDZENZUVFwSwoxV1BOQTRVZmYxV3k0cDFXUXJvSVhMZTV1VHZkSDVIcHBRc2syTXhPUVlkajBIMFE0TkRtdDJxTTd6SENwUHdVCjNvSUQ4LzFJbWptejY5ZlJ6UjluYjNwY0VoUWZ3aWtldDdheXZ0R01MQnV3S3ZrYXh0ZVI5cXZYZVhHMVJRQlUKeU9XODczUkY5c2hHTVk1VVZmakNuWU1GdmM5VE5wMUswOStnYVJLRFNZdEhOekZiSExTcEp6eG50SDkwUUlGSwpYRUJCcGg0VFhSejRBZTNzNmg0bC9Wd0Jjczc4eDBmN09VNDNqVGdlZ052Q2NPc1F1UlM4dkFRNDNzU3VKYUlGCmpRSURBUUFCbzFNd1VUQWRCZ05WSFE0RUZnUVV5VUZldVZBeGJ6SHM0K01qaktxdjZTdnMvNW93SHdZRFZSMGoKQkJnd0ZvQVV5VUZldVZBeGJ6SHM0K01qaktxdjZTdnMvNW93RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFOQmdrcQpoa2lHOXcwQkFRc0ZBQU9DQVFFQURaVVFHZmhrTmFzZldiR21URXJTb2s2VHZlSlFVNEJDemk3RFBhV2dUVDFxCmt1NVhBSlU2Nk14QkUyaGJMVFhVa212S3FFK2V3K2c5dWc3NERrMVVuSHpieXpzcGpsRHhKcG9mQ3dJODN4UC8KN1JMYUN6V1A2UEw4WmZnU2NSSlUycTZtWHN5WmN0NEsrVzZnVzJUajgzMWpKV3JqVEgrNzZORXFJcFBUbGY4egprdUpjVkFRempiTnM3RjdFOHcxT2RBcExiSDhJVE9USW4rdEFQcFJCdVRYK0cwTjMyMUxhdy9iZ1BYREVvY0NFCmMzYTFBcHJ1Q1F5dXBkV3UrV1ZnNlRsdVFQWUNmbXV3cWRwbld6dGRuKzFEanNBUEdDU1JyMEl2c2JZa050TVgKT3F4dC93VHdKeHZtMVlseURBYjM5WUFWdHp6MnFmQll0M0o4NTR4YWpBPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="
+    rules:
+      - operations: ["CREATE", "UPDATE", "DELETE"]
+        apiGroups: ["*"]
+        apiVersions: ["*"]
+        resources: ["*/*"]
+        scope: "*"
+      - operations: ["CONNECT"]
+        apiGroups: ["*"]
+        apiVersions: ["*"]
+        resources: ["pods/exec", "pods/portforward", "pods/proxy", "pods/attach"]
+        scope: "*"
+    admissionReviewVersions: ["v1"]
