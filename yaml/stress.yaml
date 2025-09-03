@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stress
+spec:
+  nodeName: ip-10-50-30-68.ap-northeast-2.compute.internal
+  containers:
+  - name: stress
+    image: polinux/stress
+    command: ["stress"]
+    args: ["--cpu","2","--timeout","330s"]
+    resources: {}
+      # limits:
+        # cpu: "1200m"

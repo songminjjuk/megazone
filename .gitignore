@@ -1,0 +1,86 @@
+/bin/
+/kubectl
+
+# 인증서 / 키 / 토큰 / 비밀
+*.crt
+*.pem
+*.key
+*.pfx
+*.p12
+*.jks
+*.der
+*.csr
+*.gpg
+*.asc
+
+# kubeconfig / VPN
+*.kubeconfig
+*kubeconfig*
+*.ovpn
+
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+**/terraform.tfstate*
+**/*terraform.tfvars*
+
+# Cloud Credentials
+*.credentials
+*.aws/*
+*credentials.json
+*service-account.json
+*.azure/*
+*.gcp/*
+
+# 환경변수 / Secret
+.env
+.env.*
+*.secrets
+secrets.*
+secret-*.yaml
+*Secret.yaml
+*Secret.yml
+*secret.yaml
+*secret.yml
+
+# IDE / OS
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+*.out
+*.err
+
+# 빌드/캐시
+*.class
+*.pyc
+__pycache__/
+node_modules/
+dist/
+target/
+build/
+# 홈 디렉토리 개인 설정/민감 정보
+.bash_history
+.bash_logout
+.bash_profile
+.bashrc
+.cache/
+.config/
+.docker/
+.dotnet/
+.kube/
+.lesshst
+.m2/
+.mysql_history
+.npm/
+.ssh/
+.vscode-server/
+aws/
+

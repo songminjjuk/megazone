@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: application-ingress
+  annotations:
+    alb.ingress.kubernetes.io/target-type: "ip"
+    alb.ingress.kubernetes.io/scheme: "internet-facing"
+    alb.ingress.kubernetes.io/load-balancer-name: megazone-alb
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS":443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:432128687171:certificate/21d5c2cf-f5b5-4175-8262-2f4835f50151
+    alb.ingress.kubernetes.io/healthcheck-path: "/api/v1/healthz"
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+spec:
+  ingressClassName: alb
+  rules:
+  - host: api.megagle.shop
+    http:
+      paths:
+      - path: /api/v1/employees
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-svc
+            port:
+              number: 80
