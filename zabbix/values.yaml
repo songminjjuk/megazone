@@ -285,11 +285,12 @@ postgresql:
   resources: {}
   persistence:
     # -- Whether to enable persistent storage for the postgres container or not
-    enabled: false
+    enabled: true
     # -- Existing persistent volume claim name to be used to store postgres data
-    existingClaimName: false
+    existingClaimName: "zabbix-claim"
+    
     # -- Size of the PVC to be automatically generated
-    storageSize: 5Gi
+    storageSize: 3Gi
     # -- Kubernetes uses volume access modes to match PersistentVolumeClaims and PersistentVolumes. See: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes
     # claim_access_mode: "ReadWriteOnce"
     # -- Storage PVC storageclass to use
@@ -1083,4 +1084,3 @@ helmTestJobs:
     resources: {}
   # -- nodeSelector configurations. Reference: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   nodeSelector: {}
-

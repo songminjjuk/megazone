@@ -415,13 +415,14 @@ extraContainerVolumes: []
 ##
 persistence:
   type: pvc
-  enabled: false
+  enabled: true
   # storageClassName: default
   ## (Optional) Use this to bind the claim to an existing PersistentVolume (PV) by name.
   volumeName: ""
+  existingClaim: grafana-claim
   accessModes:
     - ReadWriteOnce
-  size: 10Gi
+  size: 3Gi
   # annotations: {}
   finalizers:
     - kubernetes.io/pvc-protection
