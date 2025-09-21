@@ -1,6 +1,7 @@
 package com.kimdragon.employeemanagement.controller;
 
 import com.kimdragon.employeemanagement.domain.Employee;
+import com.kimdragon.employeemanagement.domain.EmployeeMasked;
 import com.kimdragon.employeemanagement.service.IEmployeeService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -27,17 +28,24 @@ class EmployeeController {
     private IEmployeeService employeeService;
 
     //get all employees
+    // @GetMapping("/employees")
+    // @ApiOperation(value ="emp list", notes = "회원 리스트")
+
+    // public List<Employee> getAll() {
+
+    //     logger.debug("employee_list");
+
+    //     return employeeService.getAll();
+    // get all employees (masked)
+    //}
+
     @GetMapping("/employees")
-    @ApiOperation(value ="emp list", notes = "회원 리스트")
-
-    public List<Employee> getAll() {
-
-        logger.debug("employee_list");
-
-        return employeeService.getAll();
-
-
+    @ApiOperation(value ="emp list (masked)", notes = "회원 리스트(마스킹)") // changed
+    public List<EmployeeMasked> getAll() { // changed: 반환 타입을 EmployeeMasked로
+        logger.debug("employee_list_masked"); // changed
+        return employeeService.getAllMasked(); // changed
     }
+
 
     //add employee
     @PostMapping("/employees")
@@ -49,16 +57,26 @@ class EmployeeController {
         return employeeService.add(employee);
     }
 
-    //get employee by id
+    // //get employee by id
+    // @GetMapping("/employees/{id}")
+    // @ApiOperation(value ="emp Get", notes = "회원정보 확인")
+    // @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "string", paramType = "path")
+
+    // public ResponseEntity<Employee> getById(@PathVariable Long id) {
+
+    //     logger.debug("employee_getid");
+
+    //     Employee employee = employeeService.findById(id);
+    //     return ResponseEntity.ok(employee);
+    // }
+
+    // get employee by id (masked)
     @GetMapping("/employees/{id}")
-    @ApiOperation(value ="emp Get", notes = "회원정보 확인")
+    @ApiOperation(value ="emp Get (masked)", notes = "회원정보 확인(마스킹)") // changed
     @ApiImplicitParam(name = "id", value = "ID", required = true, dataType = "string", paramType = "path")
-
-    public ResponseEntity<Employee> getById(@PathVariable Long id) {
-
-        logger.debug("employee_getid");
-
-        Employee employee = employeeService.findById(id);
+    public ResponseEntity<EmployeeMasked> getById(@PathVariable Long id) { // changed
+        logger.debug("employee_getid_masked"); // changed
+        EmployeeMasked employee = employeeService.findMaskedById(id); // changed
         return ResponseEntity.ok(employee);
     }
 

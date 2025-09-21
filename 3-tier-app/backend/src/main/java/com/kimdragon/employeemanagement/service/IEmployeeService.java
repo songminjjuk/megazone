@@ -1,7 +1,7 @@
 package com.kimdragon.employeemanagement.service;
 
 import com.kimdragon.employeemanagement.domain.Employee;
-
+import com.kimdragon.employeemanagement.domain.EmployeeMasked; // added
 import java.util.List;
 
 public interface IEmployeeService {
@@ -16,4 +16,7 @@ public interface IEmployeeService {
     Employee findById(Long id);
 
     void deleteById(Long id);
+        // ===== 마스킹 뷰 조회 =====
+    List<EmployeeMasked> getAllMasked();   // added
+    EmployeeMasked findMaskedById(Long id); // added
 }

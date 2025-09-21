@@ -3,7 +3,6 @@ kind: Pod
 metadata:
   name: stress
 spec:
-  nodeName: ip-10-50-30-68.ap-northeast-2.compute.internal
   containers:
   - name: stress
     image: polinux/stress

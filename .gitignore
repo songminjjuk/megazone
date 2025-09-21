@@ -1,7 +1,7 @@
 /bin/
 *.gitconfig
 /kubectl
-
+*.psql_history
 # 인증서 / 키 / 토큰 / 비밀
 *.crt
 *.pem

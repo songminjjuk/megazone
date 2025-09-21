@@ -38,7 +38,7 @@ postgresAccess:
   # host, port and db needs to be filled below
   # if this option is chosen the below listed settings are being ignored
   # -- Name of an existing secret to use for database access. This could be one created by a Postgres operator such as CNPG or PGO
-  existingSecretName: ""
+  existingSecretName: "zabbix-db"
   # -- key of the postgres access secret where host ip / dns name for the postgres db is found
   # if removed postgresAccess.host is used
   secretHostKey: host
@@ -60,13 +60,13 @@ postgresAccess:
   # being used in all components except the db-init-upgrade-job. The job will get the database access credentials
   # as literal values always if no existing secret is used, due to anatomy of Helm Charts and pre-install/pre-upgrade hooks
   # -- Address of database host - ignored if postgresql.enabled=true
-  host: "zabbix-postgresql"
+  host: "zabbix-postgresql2.c5c4q6cga2c0.ap-northeast-2.rds.amazonaws.com"
   # -- Port of database host - ignored if postgresql.enabled=true or when existingSecretName is set
   port: "5432"
   # -- User of database, ignored if existingSecretName is set
   user: "zabbix"
   # -- Password of database, eignored if existingSecretName is set
-  password: "zabbix"
+  password: "zabbix12"
   # -- Name of database, eignored if existingSecretName is set
   database: "zabbix"
   # -- Schema of database. Can be left empty if secretSchemaKey is not set. Only being used if external database is used (`postgresql.enabled` not set)
@@ -79,15 +79,19 @@ zabbixServer:
   # -- Section responsible for native Zabbix Server High Availability support of this Helm Chart
   zabbixServerHA:
     # -- Enables support for Zabbix Server High Availability. If disabled, replicaCount will always be 1. Can not be combined with ``postgresql.enabled=true``
-    enabled: false
+    enabled: true
     # -- K8S Role being used for database initialization and upgrade job, which needs access to certain Kubernetes resources
     role:
       # -- Extra annotations for the role needed to give the HA related sidecars and the DB job API permissions
       annotations: {}
+        # helm.sh/hook: pre-install,pre-upgrade
+        # helm.sh/hook-weight: "0"
+        # helm.sh/hook-delete-policy: before-hook-creation
     # -- Rolebinding being used for the database initialization and upgrade job
     roleBinding:
       # -- Extra annotations for the roleBinding needed to give the HA related DB init and upgrade job
       annotations: {}
+
     # -- Serviceaccount for the database initialization and upgrade job
     serviceAccount:
       # -- Extra annotations for the serviceAccount needed to give the DB job API permissions
@@ -113,6 +117,7 @@ zabbixServer:
       extraContainers: []
       # -- Additional specifications to the dbCreateUpgradeJob pod
       extraPodSpecs: {}
+        # serviceAccountName: zabbix-ha-helper
       # -- Additional volumeMounts to the dbCreateUpgradeJob pod
       extraVolumeMounts: []
       # -- Additional volumes to make available to the dbCreateUpgradeJob pod
@@ -124,6 +129,7 @@ zabbixServer:
       securityContext: {}
     # -- The HA labels sidecar checks for the current pod whether it is the active Zabbix Server HA node and sets labels on it, accordingly
     haLabelsSidecar:
+      enabled: true
       # -- Image settings for the HA labels sidecar
       image:
         # -- Repository where to get the image for the HA labels sidecar container
@@ -143,7 +149,7 @@ zabbixServer:
       # -- Extra VolumeMounts for the HA labels sidecar
       extraVolumeMounts: []
   # -- Number of replicas of ``zabbixServer`` module. Will be forced to be 1 if ``zabbixServer.zabbixServerHA=false``
-  replicaCount: 1
+  replicaCount: 2
   # -- Set permissive podAntiAffinity to spread replicas over cluster nodes if replicaCount>1
   podAntiAffinity: true
   # -- Optional set true open a port direct on node where Zabbix Server runs
@@ -235,8 +241,9 @@ zabbixServer:
     annotations: {}
     # metallb.universe.tf/address-pool: production-public-ips
   # -- Extra environment variables. A list of additional environment variables. List can be extended with other environment variables listed here: https://github.com/zabbix/zabbix-docker/tree/7.0/Dockerfiles/server-pgsql/alpine#environment-variables. See example: https://github.com/zabbix-community/helm-zabbix/blob/main/charts/zabbix/docs/example/kind/values.yaml
+  #################extraEnv: []
   extraEnv: []
-
+    
   # - name: ENABLE_TIMESCALEDB
   #   value: "true"
   # -- Annotations to add to the deployment
@@ -271,7 +278,7 @@ zabbixServer:
 # **PostgreSQL** configuration
 postgresql:
   # -- Create a database using Postgresql. Not usable in combination with ``zabbixserver.zabbixServerHA=true``
-  enabled: true
+  enabled: false
   image:
     # -- Postgresql Docker image name: chose one of "postgres" or "timescale/timescaledb"
     repository: postgres
@@ -286,9 +293,9 @@ postgresql:
   resources: {}
   persistence:
     # -- Whether to enable persistent storage for the postgres container or not
-    enabled: true
+    enabled: false
     # -- Existing persistent volume claim name to be used to store postgres data
-    existingClaimName: "zabbix-claim"
+    existingClaimName: ""
     
     # -- Size of the PVC to be automatically generated
     storageSize: 3Gi
@@ -456,7 +463,7 @@ zabbixAgent:
   # -- Enables use of **Zabbix Agent**
   enabled: true
   # -- Its is a default mode. Zabbix-agent will run as sidecar in zabbix-server and zabbix-proxy pods. Disable this mode if you want to run zabbix-agent as daemonSet
-  runAsSidecar: false
+  runAsSidecar: true
   # -- Enable this mode if you want to run zabbix-agent as daemonSet. The 'zabbixAgent.runAsSidecar' option must be false.
   runAsDaemonSet: true
   # -- Requests and limits of pod resources. See: [https://kubernetes.io/docs/concepts/configuration/manage-resources-containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers)
